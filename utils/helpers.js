@@ -11,4 +11,10 @@ module.exports = {
 
     return `<span for="img" aria-label="book">${book}</span>`;
   },
+  format_date: (date) => {
+    return date.toLocaleDateString();
+  },
+  format_amount: (amount) => {
+    return parseInt(amount).toLocaleString();
+  },
 };
