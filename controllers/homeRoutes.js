@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { User } = require('../models');
+const { Post } = require('../models')
 const withAuth = require('../utils/auth');
 
 // Prevent non logged in users from viewing the homepage
@@ -22,6 +23,10 @@ router.get('/', withAuth, async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+
+});
+
 router.get('/login', (req, res) => {
   // If a session exists, redirect the request to the homepage
   if (req.session.logged_in) {
@@ -31,5 +36,28 @@ router.get('/login', (req, res) => {
 
   res.render('login');
 });
+
+router.get('/post/:id', async (req, res) => {
+  try {
+    const postData = await Post.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['name'],
+        },
+      ],
+    });
+
+    const post = postData.get({ plain: true });
+
+    res.render('post', {
+      ...post,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 module.exports = router;
