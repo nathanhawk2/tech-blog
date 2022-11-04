@@ -3,7 +3,7 @@ const { User } = require('../../models');
 const withAuth = require('../../utils/auth');
 
 
-router.get('/home', withAuth, async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
   try {
     const userPosts = await User.findAll({
       attributes: { exclude: ['password', 'email'] },

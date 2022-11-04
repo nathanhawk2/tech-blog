@@ -1,6 +1,22 @@
 const router = require('express').Router();
 const { User } = require('../../models');
 
+router.post('/', async(req, res) => {
+  try {
+    let user = await User.create(req.body);
+
+    req.session.save(() => {
+      req.session.id = user.id;
+      req.session.email = user.email;
+      req.session.logged_in = true;
+
+      res.status(200).json(user);
+    })
+  } catch (err) {
+    res.status(400).json(err);
+  }
+})
+
 router.post('/login', async (req, res) => {
   try {
     // Find the user who matches the posted e-mail address
